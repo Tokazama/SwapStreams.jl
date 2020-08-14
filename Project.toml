@@ -9,4 +9,4 @@ MappedArrays = "dbb5928d-eab1-5f90-85c2-b9b0edb7c900"
 
 [compat]
 MappedArrays = "0.2"
-julia = "1.4", "1.5"
+julia = "1.4, 1.5"
