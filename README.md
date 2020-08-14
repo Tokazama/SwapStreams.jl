@@ -2,7 +2,7 @@
 
 
 ```julia
-julia> using SwapStream
+julia> using SwapStreams
 
 julia> s = SwapStream(IOBuffer());  # assume byte swapping is necessary
 
@@ -44,11 +44,12 @@ A `SwapStream` can be constructed as follows
 ```julia
 julia> using SwapStreams
 
-julia> io = IOBuffer()
+julia> io = IOBuffer();
 
 julia> SwapStream{true}(io) == SwapStream(io)  # does byte swap
 true
 
-julia> SwapStream{false}(io) == SwapStream(ENDIAN_BOM, io)  # doesn't byte swap
+julia> SwapStream{false}(io) ==    # explicitly do not byte swap
+       SwapStream(ENDIAN_BOM, io)  # since stream has same endian type as system no swap
 true
 ```

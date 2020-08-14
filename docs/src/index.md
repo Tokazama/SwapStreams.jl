@@ -1,1 +1,7 @@
 # SwapStreams
+
+
+```@docs
+SwapStreams
+SwapStream
+```

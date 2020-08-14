@@ -1,5 +1,10 @@
 module SwapStreams
 
+@doc let path = joinpath(dirname(@__DIR__), "README.md")
+    include_dependency(path)
+    replace(read(path, String), r"^```julia"m => "```jldoctest README")
+end SwapStreams
+
 using MappedArrays
 
 export
@@ -113,7 +118,11 @@ end
 
 Base.read(s::SwapStream, ::Type{Int8}) = read(s.io, Int8)
 
-function Base.read(s::SwapStream{S}, ::Type{T}) where {S,T<:Union{Int16,UInt16,Int32,UInt32,Int64,UInt64,Int128,UInt128,Float16,Float32,Float64}}
+function Base.read(
+    s::SwapStream{S},
+    T::Union{Type{Float16}, Type{Float32}, Type{Float64}, Type{Int128}, Type{Int16}, Type{Int32}, Type{Int64}, Type{UInt128}, Type{UInt16}, Type{UInt32}, Type{UInt64}}
+) where {S}
+
     if S
         return bswap(Base.read!(s.io, Ref{T}(0))[]::T)
     else
@@ -149,6 +158,18 @@ end
 function Base.write(s::SwapStream{S}, x::T) where {S,T}
     if S
         return write(s.io, map(bswap, x))
+    else
+        return write(s.io, x)
+    end
+end
+
+function Base.write(
+    s::SwapStream{S},
+    x::Union{Int16,UInt16,Int32,UInt32,Int64,UInt64,Int128,UInt128,Float16,Float32,Float64}
+) where {S}
+
+    if S
+        return write(s.io, bswap(x))
     else
         return write(s.io, x)
     end
