@@ -18,7 +18,7 @@ swaps to and from the appropriate endian type.
 
 ## Examples
 ```jldoctest
-julia> using SwapStream
+julia> using SwapStreams
 
 julia> s = SwapStream(IOBuffer());  # assume byte swapping is necessary
 
