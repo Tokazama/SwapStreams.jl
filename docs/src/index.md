@@ -1,6 +1,5 @@
 # SwapStreams
 
-
 ```@docs
 SwapStreams
 SwapStream

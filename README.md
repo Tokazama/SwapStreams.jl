@@ -4,6 +4,9 @@
 [![stable-docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/stable)
 [![dev-docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/dev)
 
+`SwapStreams` exports a simple type (`SwapStream`) that wraps any I/O stream.
+Once constructed, a `SwapStream` will byte swap any read/write operation if appropriate.
+
 ```julia
 julia> using SwapStreams
 
@@ -43,7 +46,8 @@ julia> read!(s, Vector{Int}(undef, 10))  # byte swapped data from buffer
 
 ```
 
-A `SwapStream` can be constructed as follows
+One can directly tell a `SwapStream` to byte swap or not by specifying `true` or `false` at the time of its construction.
+Alternatively, one may specify whether the stream is big or little endian with the exported constants `BigEndian` and `LittleEndian`.
 ```julia
 julia> using SwapStreams
 
@@ -53,6 +57,9 @@ julia> SwapStream{true}(io) == SwapStream(io)  # does byte swap
 true
 
 julia> SwapStream{false}(io) ==    # explicitly do not byte swap
-       SwapStream(ENDIAN_BOM, io)  # since stream has same endian type as system no swap
+       SwapStream(ifelse(ENDIAN_BOM == BigEndian, BigEndian, LittleEndian), io)  # since stream has same endian type as system no swap
 true
 ```
+
+Note that we set the stream's endianness to the same as the system's so that it wouldn't perform byte swapping.
+
