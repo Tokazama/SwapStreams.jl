@@ -1,5 +1,8 @@
 # SwapStreams.jl
 
+[![Build Status](https://travis-ci.com/Tokazama/SwapStreams.jl.svg?branch=master)](https://travis-ci.com/Tokazama/SwapStreams.jl)
+[![stable-docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/stable)
+[![dev-docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/dev)
 
 ```julia
 julia> using SwapStreams
