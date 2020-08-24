@@ -83,6 +83,9 @@ struct SwapStream{S,IOType} <: IO
     end
 end
 
+is_swapping(x) = is_swapping(typeof(x))
+is_swapping(::Type{<:SwapStream{S}}) where {S} = S
+
 
 Base.seek(s::SwapStream, n::Integer) = seek(s.io, n)
 Base.position(s::SwapStream)  = position(s.io)
@@ -117,6 +120,7 @@ function Base.read!(s::SwapStream{S}, a::AbstractArray{T}) where {S,T}
 end
 
 Base.read(s::SwapStream, ::Type{Int8}) = read(s.io, Int8)
+Base.read(s::SwapStream, ::Type{UInt8}) = read(s.io, UInt8)
 
 function Base.read(
     s::SwapStream{S},

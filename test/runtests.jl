@@ -1,3 +1,4 @@
+
 using Test
 using SwapStreams
 using Documenter
@@ -7,8 +8,10 @@ using Documenter
 strue = SwapStream(IOBuffer())
 sfalse = SwapStream{false}(IOBuffer())
 
+
 @test !isreadonly(strue)
 @test !isreadonly(sfalse)
+@test iswritable(strue)
 @test isopen(strue)
 @test isopen(sfalse)
 @test isreadable(strue)
@@ -33,6 +36,12 @@ reset(sfalse)
 @test position(sfalse) == 8
 @test !ismarked(strue)
 @test !ismarked(sfalse)
+
+mark(strue)
+@test ismarked(strue)
+unmark(strue)
+@test !ismarked(strue)
+
 seekend(strue)
 seekend(sfalse)
 @test eof(strue)
@@ -41,6 +50,30 @@ seek(strue, 0)
 seek(sfalse, 0)
 @test read(strue, Int) == 1
 @test read(sfalse, Int) == 1
+
+
+close(strue)
+@test !iswritable(strue)
+
+
+@test SwapStreams.is_swapping(SwapStream(ifelse(ENDIAN_BOM == BigEndian, LittleEndian, BigEndian), IOBuffer()))
+@test SwapStreams.is_swapping(typeof(SwapStream(ifelse(ENDIAN_BOM == BigEndian, LittleEndian, BigEndian), IOBuffer())))
+@test !SwapStreams.is_swapping(SwapStream(ifelse(ENDIAN_BOM == BigEndian, BigEndian, LittleEndian), IOBuffer()))
+
+
+x = UInt8[1,2,3]
+s = SwapStream(IOBuffer())
+write(s, x)
+seek(s, 0)
+@test read(s, UInt8) === UInt8(1)
+@test read!(s, Vector{UInt8}(undef, 2)) == x[2:3]
+
+x = Int8[1,2,3]
+s = SwapStream(IOBuffer())
+write(s, x)
+seek(s, 0)
+@test read(s, Int8) === Int8(1)
+@test read!(s, Vector{Int8}(undef, 2)) == x[2:3]
 
 doctest(SwapStreams)
 
