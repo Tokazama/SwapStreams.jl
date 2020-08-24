@@ -75,6 +75,10 @@ seek(s, 0)
 @test read(s, Int8) === Int8(1)
 @test read!(s, Vector{Int8}(undef, 2)) == x[2:3]
 
-doctest(SwapStreams)
+seek(s, 0)
+@test read(s, 1) === Int8(1)
+skip(s, 1)
+@test read(s, 1) === Int8(3)
 
+doctest(SwapStreams)
 

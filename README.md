@@ -4,6 +4,12 @@
 [![stable-docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/stable)
 [![dev-docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/dev)
 
+From the documentation of `read(io::IO, T)` in the Base Julia library...
+
+> Note that Julia does not convert the endianness for you. Use `ntoh` or `ltoh for this purpose.
+
+...but `SwapStreams` does!
+
 `SwapStreams` exports a simple type (`SwapStream`) that wraps any I/O stream.
 Once constructed, a `SwapStream` will byte swap any read/write operation if appropriate.
 
