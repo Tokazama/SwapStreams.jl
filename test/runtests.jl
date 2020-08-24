@@ -80,5 +80,49 @@ seek(s, 0)
 skip(s, 1)
 @test read(s, 1) == [Int8(3)]
 
+###
+### does it work with abstract arrays
+###
+@testset "AbstractArray I/O" begin
+
+    struct IntVector <: AbstractVector{Int}
+        data::Vector{Int}
+    end
+
+    Base.length(x::IntVector) = length(x.data)
+    Base.size(x::IntVector) = size(x.data)
+    Base.getindex(x::IntVector, i::Int) = x.data[i]
+
+    Base.iterate(x::IntVector) = iterate(x.data)
+    Base.iterate(x::IntVector, state) = iterate(x.data, state)
+
+    s = SwapStream(IOBuffer())
+    x = IntVector([1,2,3]);
+    write(s, x)
+    seek(s, 0)
+    @test read!(s, Vector{Int}(undef, 3)) == [1, 2, 3]
+
+    s = SwapStream{false}(IOBuffer())
+    x = IntVector([1,2,3]);
+    write(s, x)
+    seek(s, 0)
+    @test read!(s, Vector{Int}(undef, 3)) == [1, 2, 3]
+end
+
+@testset "NTuple I/O" begin
+    s = SwapStream{false}(IOBuffer())
+    write(s, [1, 2, 3])
+    seek(s, 0)
+    r = Ref{NTuple{3,Int}}()
+    read!(s, r) === (1, 2, 3)
+
+    s = SwapStream{true}(IOBuffer())
+    write(s, [1, 2, 3])
+    seek(s, 0)
+    r = Ref{NTuple{3,Int}}()
+    read!(s, r) === (1, 2, 3)
+end
+
 doctest(SwapStreams)
+
 
