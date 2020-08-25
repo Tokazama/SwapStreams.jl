@@ -8,7 +8,6 @@ using Documenter
 strue = SwapStream(IOBuffer())
 sfalse = SwapStream{false}(IOBuffer())
 
-
 @test !isreadonly(strue)
 @test !isreadonly(sfalse)
 @test iswritable(strue)
@@ -123,6 +122,7 @@ end
     read!(s, r) === (1, 2, 3)
 end
 
-doctest(SwapStreams)
+@test stat(SwapStream{false}(open("runtests.jl"))).mode == 0x00000000000081a4
 
+doctest(SwapStreams)
 

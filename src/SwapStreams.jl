@@ -7,10 +7,7 @@ end SwapStreams
 
 using MappedArrays
 
-export
-    BigEndian,
-    LittleEndian,
-    SwapStream
+export BigEndian, LittleEndian, SwapStream
 
 const LittleEndian = 0x01020304
 const BigEndian = 0x04030201
@@ -159,14 +156,6 @@ function Base.write(s::SwapStream{S}, x::AbstractArray) where {S}
     end
 end
 
-function Base.write(s::SwapStream{S}, x::T) where {S,T}
-    if S
-        return write(s.io, map(bswap, x))
-    else
-        return write(s.io, x)
-    end
-end
-
 function Base.write(
     s::SwapStream{S},
     x::Union{Int16,UInt16,Int32,UInt32,Int64,UInt64,Int128,UInt128,Float16,Float32,Float64}
@@ -180,3 +169,4 @@ function Base.write(
 end
 
 end # module
+
