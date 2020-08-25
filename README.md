@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/Tokazama/SwapStreams.jl.svg?branch=master)](https://travis-ci.com/Tokazama/SwapStreams.jl)
 [![stable-docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/stable)
 [![dev-docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://Tokazama.github.io/SwapStreams.jl/dev)
-[![Build Status](https://travis-ci.com/Tokazama/SwapStreams.jl.svg?branch=master)](https://travis-ci.com/Tokazama/SwapStreams.jl)
+[![codecov](https://codecov.io/gh/Tokazama/SwapStreams.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/Tokazama/SwapStreams.jl)
 
 From the documentation of `read(io::IO, T)` in the Base Julia library...
 
