@@ -122,7 +122,7 @@ end
     read!(s, r) === (1, 2, 3)
 end
 
-@test stat(SwapStream{false}(open("runtests.jl"))).mode isa Base.Filesystem.StatStruct
+@test stat(SwapStream{false}(open("runtests.jl"))) isa Base.Filesystem.StatStruct
 
 doctest(SwapStreams)
 

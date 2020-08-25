@@ -1,7 +1,7 @@
 name = "SwapStreams"
 uuid = "0b152c4a-7e29-418b-9258-223db38db9d9"
 authors = ["Zachary P. Christensen <zchristensen7@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 MappedArrays = "dbb5928d-eab1-5f90-85c2-b9b0edb7c900"
