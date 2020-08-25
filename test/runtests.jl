@@ -122,7 +122,7 @@ end
     read!(s, r) === (1, 2, 3)
 end
 
-@test stat(SwapStream{false}(open("runtests.jl"))).mode == 0x00000000000081a4
+@test stat(SwapStream{false}(open("runtests.jl"))).mode isa Base.Filesystem.StatStruct
 
 doctest(SwapStreams)
 
