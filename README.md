@@ -24,7 +24,7 @@ julia> write(s, [1:10...]);         # byte swap each element before writing to b
 julia> seek(s, 0);
 
 julia> read!(s.io, Vector{Int}(undef, 10))  # raw data from buffer
-10-element Array{Int64,1}:
+10-element Vector{Int64}:
   72057594037927936
  144115188075855872
  216172782113783808
@@ -39,7 +39,7 @@ julia> read!(s.io, Vector{Int}(undef, 10))  # raw data from buffer
 julia> seek(s, 0);
 
 julia> read!(s, Vector{Int}(undef, 10))  # byte swapped data from buffer
-10-element Array{Int64,1}:
+10-element Vector{Int64}:
   1
   2
   3
@@ -60,10 +60,10 @@ julia> using SwapStreams
 
 julia> io = IOBuffer();
 
-julia> SwapStream{true}(io) == SwapStream(io)  # does byte swap
+julia> SwapStream(true, io) == SwapStream(io)  # does byte swap
 true
 
-julia> SwapStream{false}(io) ==    # explicitly do not byte swap
+julia> SwapStream(false, io) ==    # explicitly do not byte swap
        SwapStream(ifelse(ENDIAN_BOM == BigEndian, BigEndian, LittleEndian), io)  # since stream has same endian type as system no swap
 true
 ```

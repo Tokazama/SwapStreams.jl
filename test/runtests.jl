@@ -3,10 +3,8 @@ using Test
 using SwapStreams
 using Documenter
 
-@test_throws TypeError SwapStream{1}(IOBuffer())
-
 strue = SwapStream(IOBuffer())
-sfalse = SwapStream{false}(IOBuffer())
+sfalse = SwapStream(false, IOBuffer())
 
 @test !isreadonly(strue)
 @test !isreadonly(sfalse)
@@ -54,12 +52,6 @@ seek(sfalse, 0)
 close(strue)
 @test !iswritable(strue)
 
-
-@test SwapStreams.is_swapping(SwapStream(ifelse(ENDIAN_BOM == BigEndian, LittleEndian, BigEndian), IOBuffer()))
-@test SwapStreams.is_swapping(typeof(SwapStream(ifelse(ENDIAN_BOM == BigEndian, LittleEndian, BigEndian), IOBuffer())))
-@test !SwapStreams.is_swapping(SwapStream(ifelse(ENDIAN_BOM == BigEndian, BigEndian, LittleEndian), IOBuffer()))
-
-
 x = UInt8[1,2,3]
 s = SwapStream(IOBuffer())
 write(s, x)
@@ -101,7 +93,7 @@ skip(s, 1)
     seek(s, 0)
     @test read!(s, Vector{Int}(undef, 3)) == [1, 2, 3]
 
-    s = SwapStream{false}(IOBuffer())
+    s = SwapStream(false, IOBuffer())
     x = IntVector([1,2,3]);
     write(s, x)
     seek(s, 0)
@@ -109,20 +101,20 @@ skip(s, 1)
 end
 
 @testset "NTuple I/O" begin
-    s = SwapStream{false}(IOBuffer())
+    s = SwapStream(false, IOBuffer())
     write(s, [1, 2, 3])
     seek(s, 0)
     r = Ref{NTuple{3,Int}}()
     read!(s, r) === (1, 2, 3)
 
-    s = SwapStream{true}(IOBuffer())
+    s = SwapStream(true, IOBuffer())
     write(s, [1, 2, 3])
     seek(s, 0)
     r = Ref{NTuple{3,Int}}()
     read!(s, r) === (1, 2, 3)
 end
 
-@test stat(SwapStream{false}(open("runtests.jl"))) isa Base.Filesystem.StatStruct
+@test stat(SwapStream(false, open("runtests.jl"))) isa Base.Filesystem.StatStruct
 
 doctest(SwapStreams)
 
