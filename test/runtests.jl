@@ -107,7 +107,7 @@ skip(s, 1)
     @test read!(s, Vector{Int}(undef, 3)) == [1, 2, 3]
 end
 
-@testset "NTuple I/O" begin
+@testset "Pointer swap" begin
     s = SwapStream(false, IOBuffer())
     write(s, [1, 2, 3])
     seek(s, 0)
@@ -121,6 +121,10 @@ end
     r = Ref{NTuple{3,Int}}()
     read!(s, r)
     @test r[] === (1, 2, 3)
+
+    r = Ref(Int128(1))
+    SwapStreams.bswap!(r)
+    @test r[] === bswap(Int128(1))
 end
 
 @test stat(SwapStream(false, open("runtests.jl"))) isa Base.Filesystem.StatStruct

@@ -13,6 +13,7 @@ export BigEndian, LittleEndian, SwapStream
 const LittleEndian = 0x01020304
 const BigEndian = 0x04030201
 
+const Bit = Union{Int8,UInt8}
 const Bits = Union{Int16,UInt16,Int32,UInt32,Int64,UInt64,Int128,UInt128,Float16,Float32,Float64}
 const BitsType = Union{Type{Float16},Type{Float32},Type{Float64},Type{Int128},Type{Int16},Type{Int32},Type{Int64},Type{UInt128},Type{UInt16},Type{UInt32},Type{UInt64}}
 mapswap(x) = mappedarray(ntoh, hton, x)
@@ -132,17 +133,22 @@ function bswap!(a::AbstractArray)
     end
     return a
 end
+
 function bswap!(r::Base.RefValue{T}) where {T}
+    @assert isbitstype(T) "cannot byte swap references to structures that aren't composed of bits types (`isbitstype`)."
     GC.@preserve r bswap_ptr!(Base.unsafe_convert(Ptr{UInt8}, pointer_from_objref(r)), T)
+    return r
 end
 
+bswap_ptr!(p::Ptr, @nospecialize(T::Type{<:Union{Int8,UInt8,Tuple{Vararg{Int8}},Tuple{Vararg{UInt8}}}})) = nothing
 bswap_ptr!(p::Ptr, ::Type{T}) where {T<:Bits} = bswap_ptr!(p, static(sizeof(T)))
-function bswap_ptr!(p::Ptr, t::Type{NTuple{N,T}}) where {N,T}
-    for i in 1:N
-        bswap_ptr!(p + fieldoffset(t, i), T)
+function bswap_ptr!(p::Ptr, ::Type{T}) where {T}
+    for i in 1:fieldcount(T)
+        bswap_ptr!(p + fieldoffset(T, i), fieldtype(T, i))
     end
 end
 
+bswap_ptr!(ptrlo::Ptr{UInt8}, ::StaticInt{0}) = nothing
 function bswap_ptr!(ptrlo::Ptr{UInt8}, ::StaticInt{2})
     ptrhi = ptrlo + 1
     vallo = Base.unsafe_load(ptrlo)
@@ -207,6 +213,7 @@ function bswap_ptr!(ptrlo::Ptr{UInt8}, ::StaticInt{16})
     Base.unsafe_store!(ptrhi, vallo)
     bswap_ptr!(ptrlo+1, static(14))
 end
+
 
 end # module
 
