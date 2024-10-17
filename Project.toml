@@ -1,13 +1,13 @@
 name = "SwapStreams"
 uuid = "0b152c4a-7e29-418b-9258-223db38db9d9"
 authors = ["Zachary P. Christensen <zchristensen7@gmail.com>"]
-version = "0.2"
+version = "0.2.1"
 
 [deps]
 MappedArrays = "dbb5928d-eab1-5f90-85c2-b9b0edb7c900"
 Static = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
 
 [compat]
-MappedArrays = "0.3"
-Static = "0.5"
+MappedArrays = "0.3, 0.4"
+Static = "0.5, 0.6, 0.7, 0.8, 1.0, 1.1"
 julia = "1.4, 1.5"

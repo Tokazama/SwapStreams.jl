@@ -106,6 +106,10 @@ Base.read(s::SwapStream{S}, ::Type{UInt8}) where {S} = read(s.io, UInt8)
 function Base.read!(s::SwapStream{S}, a::AbstractArray{T}) where {S,T}
     Static.ifelse(is_swapping(s), bswap!, identity)(read!(s.io, a))
 end
+# Fixes an ambiguity error.
+function Base.read!(s::SwapStream{S}, a::StridedArray{T}) where {S,T}
+    invoke(Base.read!, Tuple{SwapStream{S}, AbstractArray{T}}, s, a)
+end
 function Base.read(s::SwapStream{S}, T::BitsType) where {S}
     Static.ifelse(is_swapping(s), bswap, identity)(read(s.io, T))
 end
